@@ -34,7 +34,7 @@ class RedditBot(object):
                         print("Visiting card: " + cardToVisit)
                         loadedCardData = self.__load_card_data(cardToVisit)
 
-                        self.reddit.subreddit("reddit_api_test").submit(self.__format_post_title(loadedCardData), selftext=self.__format_post_description(loadedCardData))
+                        self.reddit.subreddit("marvelchampionslcg").submit(self.__format_post_title(loadedCardData), selftext=self.__format_post_description(loadedCardData))
 
                         self.__visit_card_id(cardToVisit)
                     else:
