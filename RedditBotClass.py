@@ -36,7 +36,7 @@ class RedditBot(object):
 
                         post = self.reddit.subreddit("marvelchampionslcg").submit(self.__format_post_title(loadedCardData), selftext=self.__format_post_description(loadedCardData))
                         for flair in post.flair.choices():
-                            print("Flair:" + flair)
+                            print("Flair:" + flair['flair_template_id'])
 
                         self.__visit_card_id(cardToVisit)
                     else:
