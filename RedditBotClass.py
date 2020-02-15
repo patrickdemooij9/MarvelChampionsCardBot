@@ -34,7 +34,9 @@ class RedditBot(object):
                         print("Visiting card: " + cardToVisit)
                         loadedCardData = self.__load_card_data(cardToVisit)
 
-                        self.reddit.subreddit("marvelchampionslcg").submit(self.__format_post_title(loadedCardData), selftext=self.__format_post_description(loadedCardData))
+                        post = self.reddit.subreddit("marvelchampionslcg").submit(self.__format_post_title(loadedCardData), selftext=self.__format_post_description(loadedCardData))
+                        for flair in post.flair.choices():
+                            print("Flair:" + flair)
 
                         self.__visit_card_id(cardToVisit)
                     else:
