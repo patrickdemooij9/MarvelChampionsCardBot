@@ -89,18 +89,21 @@ class RedditBot(object):
 
     def __format_post_title(self, cardData):
         msg = "[COTD] "
-        msg += cardData["name"]
+        msg += cardData["real_name"]
         if (cardData.get("subname")):
             msg += " - " + cardData["subname"]
         if (cardData.get("linked_card")):
-            msg += " - " + cardData["linked_card"]["name"]
-        msg += " (" + date.today().strftime("%d/%m/%Y") + ")"
+            msg += " - " + cardData["linked_card"]["real_name"]
+        msg += " (" + date.today().strftime("%Y/%m/%d") + ")"
         return msg
 
     def __format_post_description(self, cardData):
-        msg = "[" + cardData["name"] + "](" + cardData["url"] + ")\n\n"
+        msg = "[" + cardData["real_name"] + "](" + cardData["url"] + ")\n\n"
         if (cardData.get("card_set_name")):
-            msg += "* **" + cardData["card_set_name"] + "**\n\n"
+            msg += "* **" + cardData["card_set_name"] + "**"
+            if (cardData.get("set_position")):
+                msg += " (#" + str(cardData["set_position"]) + ")"
+            msg += "\n\n"
         else: 
             if (cardData.get("faction_name")):
                 msg += "* **" + cardData["faction_name"] + "**\n\n"
@@ -119,9 +122,13 @@ class RedditBot(object):
             if (cardData.get("attack_cost")):
                 msg += " [" + str(cardData["attack_cost"]) + " Consequential Damage]"
             msg += "\n\n"
+        if (cardData.get("defense")):
+            msg += "* **Defense:** " + str(cardData["defense"]) + "\n\n"
         if (cardData.get("health")):
             msg += "* **Health:** " + str(cardData["health"]) + "\n\n"
-        
+        if (cardData.get("hand_size")):
+            msg += "* **Hand size:** " + str(cardData["hand_size"]) + "\n\n"
+
         resources = []
         if (cardData.get("resource_mental")):
             resources.append(str(cardData["resource_mental"]) + "x Mental")
@@ -135,12 +142,15 @@ class RedditBot(object):
         if len(resources) > 0:
             msg += "* **Resource:** [ " + ', '.join(resources) + " ]\n\n"
 
-        if (cardData.get("text")):
-            msg += cardData["text"].replace("<b>", "**").replace("</b>", "**").replace("<i>", "***").replace("</i>", "***") + "\n\n"
+        if (cardData.get("real_text")):
+            msg += cardData["real_text"].replace("<b>", "**").replace("</b>", "**").replace("<i>", "*").replace("</i>", "*").replace("\n", "\n\n") + "\n\n"
 
+        if (cardData.get("flavor")):
+            msg += "*" + cardData["flavor"] + "* \n\n"
+        
+        msg += "\n\n\n\n"
         if (cardData.get("linked_card")):
-            msg += "\n\n"
-            self.__format_post_description(cardData["linked_card"])
+            msg += self.__format_post_description(cardData["linked_card"])
         else:
             msg += cardData["pack_name"] + " #" + str(cardData["position"])
         return msg
